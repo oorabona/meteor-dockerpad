@@ -1,0 +1,14 @@
+version: '3'
+services:
+  dev:
+    image: '${BASE_IMAGE}:dev'
+    build:
+      context: .
+      args:
+        NODE_CODENAME: '${NODE_CODENAME:-stretch}'
+  prod:
+    image: '${BASE_IMAGE}:${TAG}'
+    build:
+      context: .
+      args:
+        NODE_CODENAME: 'boron'

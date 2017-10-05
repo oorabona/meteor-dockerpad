@@ -1,0 +1,43 @@
+server {
+  listen [::]:80;
+  listen 80;
+
+  server_name _;
+
+  # If your application is not compatible with IE <= 10, this will redirect visitors to a page advising a browser update
+  # This works because IE 11 does not present itself as MSIE anymore
+  if ($http_user_agent ~ "MSIE" ) {
+      return 303 https://browser-update.org/update.html;
+  }
+
+  try_files $uri/index.html $uri;
+
+  # for all files with extension
+  location ~* \.(eot|ttf|woff|woff2|png|jpg|json)$ {
+    root $APP_BUNDLE_DIR/bundle/programs/web.browser/app;
+    add_header Access-Control-Allow-Origin *;
+    add_header Vary Origin;
+    add_header Pragma public;
+    add_header Cache-Control "public";
+    expires max;
+  }
+
+  location ~* "^/[a-z0-9]{40}\.(css|js)(\.map)?$" {
+    root $APP_BUNDLE_DIR/bundle/programs/web.browser;
+    access_log off;
+    expires max;
+  }
+
+  location ~ "^/packages" {
+    root $APP_BUNDLE_DIR/bundle/programs/web.browser;
+    access_log off;
+  }
+
+  location / {
+    proxy_pass http://localhost:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+  }
+}
