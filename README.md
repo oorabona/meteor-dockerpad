@@ -1,7 +1,7 @@
 # Meteor Docker Pad
 
 This piece of software mostly derives from the work of [meteor-launchpad](https://github.com/jshimko/meteor-launchpad/).
-At first I was thinking about submitting PR, but I reconsidered when I found I did too many modifications in @jshimko code !
+At first I was thinking about submitting PR, but I reconsidered when I found I did too many modifications in [jshimko](https://github.com/jshimko) code !
 
 # Features
 
@@ -76,7 +76,7 @@ As you can see from the `Dockerfile`, scripts are `ONBUILD` meaning they will re
 That allows most of the customisation described below:
 
 | Environment variable | Description | Present in `launchpad.conf` | Default value
-|--|--|--|
+-|-|-|-|
 | APT_GET_INSTALL | Put here all packages you would need to install with `apt` | No | No
 | TOOL_NODE_FLAGS | Additional `node` flags to pass when building your project | No | No
 | METEOR_VERSION | Meteor version to download and build against | Yes | Value taken from `.meteor/release`
@@ -92,7 +92,7 @@ This docker image relies on [su-exec](https://github.com/ncopa/su-exec.git) inst
 
 > Reason for that is that this very important tool does not need all the `Go` language and its overwhelming dependencies at all to be efficient. So, to minimize image size and maximize efficiency, the bare `C` version is more than enough :smile:
 
-From the user perspective, it does the following:
+What it does:
 1. Installs user prerequisites with apt-get
 2. Copy source code to container path ```/opt/meteor/src```
 3. Download and install Meteor based on the version found in ```.meteor/release```
