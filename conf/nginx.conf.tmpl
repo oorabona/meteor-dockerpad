@@ -12,6 +12,13 @@ server {
 
   try_files $uri/index.html $uri;
 
+  # only for stats.json which is a special case
+  location ~* \.stats\.json$ {
+    root $APP_BUNDLE_DIR/bundle/programs/web.browser;
+    access_log off;
+    expires max;
+  }
+
   # for all files with extension
   location ~* \.(eot|ttf|woff|woff2|png|jpg|json)$ {
     root $APP_BUNDLE_DIR/bundle/programs/web.browser/app;
