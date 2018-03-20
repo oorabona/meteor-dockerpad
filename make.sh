@@ -29,5 +29,5 @@ $DC build prod
 
 p "All done!\n"
 p "When you are ready, you can push them to the registry by running:"
-p "docker push" $BASE_IMAGE ":dev"
-p "docker push" $BASE_IMAGE $TAG
+p "docker push $BASE_IMAGE:dev"
+p "docker push $BASE_IMAGE:$TAG"
