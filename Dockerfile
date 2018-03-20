@@ -2,6 +2,9 @@ ARG   NODE_CODENAME=latest
 FROM  node:${NODE_CODENAME}
 MAINTAINER Olivier Orabona <olivier.orabona@gmail.com>
 
+# Global environment for everything following
+ENV DEBIAN_FRONTEND noninteractive
+
 # Default values for Meteor environment variables
 ENV ROOT_URL=http://localhost \
     MONGO_URL=mongodb://127.0.0.1:27017/meteor \
