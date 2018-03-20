@@ -1,5 +1,5 @@
-ARG   NODE_CODENAME=latest
-FROM  node:${NODE_CODENAME}
+ARG   DEBIAN_VERSION=stretch-slim
+FROM  debian:${DEBIAN_VERSION}
 MAINTAINER Olivier Orabona <olivier.orabona@gmail.com>
 
 # Global environment for everything following
