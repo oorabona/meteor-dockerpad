@@ -5,10 +5,10 @@ services:
     build:
       context: .
       args:
-        NODE_CODENAME: '${NODE_CODENAME:-stretch}'
+        DEBIAN_VERSION: '${DEBIAN_VERSION:-stretch}'
   prod:
     image: '${BASE_IMAGE}:${TAG}'
     build:
       context: .
       args:
-        NODE_CODENAME: 'boron'
+        DEBIAN_VERSION: "${DEBIAN_VERSION:-stretch-slim}"

@@ -2,6 +2,15 @@
 set -e
 source $BUILD_SCRIPTS_DIR/common.sh
 
+p "Updating packages cache..."
+apt update
+
+p "Installing needed base packages..."
+apt install -y gettext-base git ca-certificates make gcc curl
+
+p "Apply safe upgrade to our base image..."
+apt upgrade -y
+
 p "Installing prerequisites su-exec..."
 
 cd /tmp
@@ -10,12 +19,3 @@ cd su-exec
 make
 chmod +x su-exec
 cp su-exec /usr/local/bin/
-
-p "Updating packages cache..."
-apt update
-
-p "Installing needed base packages..."
-apt install -y apt-utils gettext-base
-
-p "Apply safe upgrade to our base image..."
-apt upgrade -y
