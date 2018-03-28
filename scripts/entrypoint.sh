@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
-source $APP_BUNDLE_DIR/bundle/common.sh
+source $BUILD_SCRIPTS_DIR/common.sh
 
 start() {
-  export METEOR_SETTINGS=$(cat /etc/settings.json)
+  if [ -f $APP_BUNDLE_DIR/settings.json ]
+  then
+    export METEOR_SETTINGS=$(cat $APP_BUNDLE_DIR/settings.json)
+  fi
 
   # try to start local MongoDB if no external MONGO_URL was set
   if [[ "${MONGO_URL}" == *"127.0.0.1"* ]]; then
@@ -17,9 +20,8 @@ start() {
     fi
   fi
 
-
   # If NginX was installed, start it ...
-  nx=$(which nginx)
+  nx=$(command -v nginx)
 
   if [ -f "$nx" ]; then
     p "Starting NginX..."
@@ -37,7 +39,8 @@ start() {
 
   # allow the container to be started with `--user`
   if [ "$(id -u)" = "0" ]; then
-    exec su-exec node node "$APP_MAINJS"
+    cd $APP_BUNDLE_DIR/bundle
+    exec su-exec meteor meteor node $APP_MAINJS
   fi
 }
 
