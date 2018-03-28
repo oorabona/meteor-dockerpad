@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 services:
   dev:
     image: '${BASE_IMAGE}:dev'
@@ -6,9 +6,49 @@ services:
       context: .
       args:
         DEBIAN_VERSION: '${DEBIAN_VERSION:-stretch}'
-  prod:
-    image: '${BASE_IMAGE}:${TAG}'
+  slim:
+    image: '${BASE_IMAGE}:slim'
     build:
       context: .
       args:
-        DEBIAN_VERSION: "${DEBIAN_VERSION:-stretch-slim}"
+        DEBIAN_VERSION: '${DEBIAN_VERSION:-stretch}-slim'
+  m-slim:
+    image: '${BASE_IMAGE}:m-slim'
+    build:
+      context: .
+      args:
+        DEBIAN_VERSION: "${DEBIAN_VERSION:-stretch}-slim"
+        INSTALL_METEOR: "true"
+        METEOR_VERSION: "latest"
+        INSTALL_MONGO: "false"
+        INSTALL_NGINX: "false"
+  mm-slim:
+    image: '${BASE_IMAGE}:mm-slim'
+    build:
+      context: .
+      args:
+        DEBIAN_VERSION: "${DEBIAN_VERSION:-stretch}-slim"
+        INSTALL_METEOR: "true"
+        METEOR_VERSION: "latest"
+        INSTALL_MONGO: "true"
+        INSTALL_NGINX: "false"
+  mn-slim:
+    image: '${BASE_IMAGE}:mn-slim'
+    build:
+      context: .
+      args:
+        DEBIAN_VERSION: "${DEBIAN_VERSION:-stretch}-slim"
+        INSTALL_METEOR: "true"
+        METEOR_VERSION: "latest"
+        INSTALL_MONGO: "false"
+        INSTALL_NGINX: "true"
+  mmn-slim:
+    image: '${BASE_IMAGE}:mmn-slim'
+    build:
+      context: .
+      args:
+        DEBIAN_VERSION: "${DEBIAN_VERSION:-stretch}-slim"
+        INSTALL_METEOR: "true"
+        METEOR_VERSION: "latest"
+        INSTALL_MONGO: "true"
+        INSTALL_NGINX: "true"

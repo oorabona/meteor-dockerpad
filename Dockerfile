@@ -1,6 +1,16 @@
-ARG   DEBIAN_VERSION=stretch-slim
+# Make Debian base image a variable (no default value to avoid mishaps)
+ARG   DEBIAN_VERSION
+
 FROM  debian:${DEBIAN_VERSION}
 MAINTAINER Olivier Orabona <olivier.orabona@gmail.com>
+
+# This has to be after FROM directive since it comes after pulling image
+ARG   INSTALL_METEOR=$INSTALL_METEOR
+ARG   METEOR_VERSION=$METEOR_VERSION
+ARG   INSTALL_MONGO=$INSTALL_MONGO
+ARG   INSTALL_NGINX=$INSTALL_NGINX
+ARG   EXTRA_PREINSTALL_SCRIPT=$EXTRA_PREINSTALL_SCRIPT
+ARG   EXTRA_POSTINSTALL_SCRIPT=$EXTRA_POSTINSTALL_SCRIPT
 
 # Global environment for everything following
 ENV DEBIAN_FRONTEND noninteractive
@@ -18,38 +28,29 @@ ENV ROOT_URL=http://localhost \
 EXPOSE 3000/tcp 80/tcp
 
 # build directories
-ENV APP_SOURCE_DIR=/opt/meteor/src \
-    APP_BUNDLE_DIR=/opt/meteor/dist \
-    BUILD_SCRIPTS_DIR=/opt/build_scripts
+ENV APP_SOURCE_DIR=/usr/src/app \
+    APP_BUNDLE_DIR=/home/meteor/ \
+    BUILD_SCRIPTS_DIR=/opt/build_scripts \
+    TOOL_NODE_FLAGS=$TOOL_NODE_FLAGS
 
 # Add entrypoint and other build scripts and (optional) conf files
 COPY scripts conf $BUILD_SCRIPTS_DIR/
 
-RUN chmod -R 750 $BUILD_SCRIPTS_DIR
-RUN $BUILD_SCRIPTS_DIR/install-prerequisites.sh
-
-# Below will happen at app build time...
-# Node flags for the Meteor build tool
-ONBUILD ENV TOOL_NODE_FLAGS=$TOOL_NODE_FLAGS \
-            INSTALL_MONGO=$INSTALL_MONGO \
-            INSTALL_NGINX=$INSTALL_NGINX \
-            EXTRA_INSTALL_SCRIPT=$EXTRA_INSTALL_SCRIPT
-
-# optionally custom apt dependencies
-ONBUILD RUN if [ "$EXTRA_INSTALL_SCRIPT" ]; then exec "$EXTRA_INSTALL_SCRIPT"; fi
+# We need to make sure scripts can be run without requiring root.
+# Also, build.sh here is needed to build "base" image(s).
+RUN chmod -R 755 $BUILD_SCRIPTS_DIR && \
+  $BUILD_SCRIPTS_DIR/build.sh
 
 # copy the app to the container
 ONBUILD COPY . $APP_SOURCE_DIR
 
-# install all dependencies, build app, clean up
-ONBUILD RUN   $BUILD_SCRIPTS_DIR/install-mongo.sh && \
-  $BUILD_SCRIPTS_DIR/install-nginx.sh && \
-  $BUILD_SCRIPTS_DIR/install-meteor.sh && \
+# Alter image with new software if needed then build app, finish with clean up
+ONBUILD RUN   $BUILD_SCRIPTS_DIR/build.sh && \
   $BUILD_SCRIPTS_DIR/build-project.sh && \
   $BUILD_SCRIPTS_DIR/post-build-cleanup.sh
 
-WORKDIR $APP_BUNDLE_DIR/bundle
+WORKDIR $BUILD_SCRIPTS_DIR
 
 # start the app
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT [ "./entrypoint.sh" ]
 CMD ["start"]
