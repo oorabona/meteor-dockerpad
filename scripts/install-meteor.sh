@@ -24,8 +24,11 @@ then
   METEOR_VERSION=$(head $APP_SOURCE_DIR/.meteor/release | cut -d "@" -f 2)
 fi
 
-# set the release version in the install script
-sed -i.bak "s/RELEASE=.*/RELEASE=\"$METEOR_VERSION\"/g" /tmp/install_meteor.sh
+if [ "$METEOR_VERSION" != "latest" ]
+then
+  # set the release version in the install script
+  sed -i.bak "s/RELEASE=.*/RELEASE=\"$METEOR_VERSION\"/g" /tmp/install_meteor.sh
+fi
 
 # replace tar command with bsdtar in the install script (bsdtar -xf "$TARBALL_FILE" -C "$INSTALL_TMPDIR")
 # https://github.com/jshimko/meteor-launchpad/issues/39
