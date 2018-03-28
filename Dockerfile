@@ -1,16 +1,16 @@
-# Make Debian base image a variable (no default value to avoid mishaps)
-ARG   DEBIAN_VERSION
+# Make Debian base image a variable (default value added for automated build on hub)
+ARG   DEBIAN_VERSION=stretch-slim
 
 FROM  debian:${DEBIAN_VERSION}
 MAINTAINER Olivier Orabona <olivier.orabona@gmail.com>
 
 # This has to be after FROM directive since it comes after pulling image
-ARG   INSTALL_METEOR=$INSTALL_METEOR
-ARG   METEOR_VERSION=$METEOR_VERSION
-ARG   INSTALL_MONGO=$INSTALL_MONGO
-ARG   INSTALL_NGINX=$INSTALL_NGINX
-ARG   EXTRA_PREINSTALL_SCRIPT=$EXTRA_PREINSTALL_SCRIPT
-ARG   EXTRA_POSTINSTALL_SCRIPT=$EXTRA_POSTINSTALL_SCRIPT
+ARG   INSTALL_METEOR=true
+ARG   METEOR_VERSION=latest
+ARG   INSTALL_MONGO=false
+ARG   INSTALL_NGINX=false
+ARG   EXTRA_PREINSTALL_SCRIPT
+ARG   EXTRA_POSTINSTALL_SCRIPT
 
 # Global environment for everything following
 ENV DEBIAN_FRONTEND noninteractive
