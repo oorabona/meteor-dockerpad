@@ -13,9 +13,12 @@ apt upgrade -y
 
 p "Installing prerequisites su-exec..."
 
-cd /tmp
-git clone https://github.com/ncopa/su-exec.git
-cd su-exec
-make
-chmod +x su-exec
-cp su-exec /usr/local/bin/
+if [ ! -x /usr/local/bin/su-exec ]
+then
+  cd /tmp
+  git clone https://github.com/ncopa/su-exec.git
+  cd su-exec
+  make
+  chmod +x su-exec
+  cp su-exec /usr/local/bin/
+fi
