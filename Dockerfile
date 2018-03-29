@@ -38,7 +38,7 @@ COPY scripts conf $BUILD_SCRIPTS_DIR/
 
 # We need to make sure scripts can be run without requiring root.
 # Also, build.sh here is needed to build "base" image(s).
-RUN chmod -R 755 $BUILD_SCRIPTS_DIR && \
+RUN chmod -R 755 $BUILD_SCRIPTS_DIR && sync && \
   $BUILD_SCRIPTS_DIR/build.sh
 
 # copy the app to the container
